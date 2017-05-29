@@ -1,6 +1,6 @@
 {
   "name": "invoke-if",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A redux reducer-generator which builds a redux-reducer from an array of reducers.",
   "main": "dist/invoke-if.js",
   "module": "src/main.js",
