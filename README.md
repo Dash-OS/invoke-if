@@ -33,9 +33,14 @@ invokeIf(
   ],
   [
     true, () => console.log(5)
+  ],
+  // the first argument can also be a function
+  [
+    () => true,
+    () => console.log(6)
   ]
 )
-// 1 2 5 -- since we encounter false at the 3rd predicate/fn pair we move to the
+// 1 2 5 6 -- since we encounter false at the 3rd predicate/fn pair we move to the
 //          next element of invokeIf.
 
 ```
