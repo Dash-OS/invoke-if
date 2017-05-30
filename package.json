@@ -1,6 +1,6 @@
 {
   "name": "invoke-if",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A redux reducer-generator which builds a redux-reducer from an array of reducers.",
   "main": "dist/invoke-if.js",
   "module": "src/main.js",
@@ -17,6 +17,13 @@
     "utility",
     "function"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dash-OS/invoke-if.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dash-OS/invoke-if/issues"
+  },
   "devDependencies": {
     "app-root-dir": "^1.0.2",
     "babel-cli": "^6.24.1",
