@@ -11,11 +11,11 @@ const INVOKE_TESTS = [
     [false, () => log('three')],
     [false, () => log('four')],
   ],
-  [
+  new Map([
     [() => true, () => log('five')],
     [() => 'true', () => log('six')],
     [() => 'seven', (arg: string) => log(arg)],
-  ],
+  ]),
 ];
 
 function one() {
