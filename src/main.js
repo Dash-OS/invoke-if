@@ -8,19 +8,17 @@ export type $NonFunction = boolean | string | number | { [key: string]: * };
 export type InvokeCheck<+A> = (() => A) | A;
 export type InvokeFn<A> = (arg: A) => mixed;
 
-export type InvokeTest<A> = [
-  InvokeCheck<A>,
-  Array<InvokeFn<A> | $NonFunction> | (InvokeFn<A> | $NonFunction),
-];
+export type Invoker<A> =
+  | Array<InvokeFn<A> | $NonFunction>
+  | (InvokeFn<A> | $NonFunction);
+
+export type InvokeTest<A> = [InvokeCheck<A>, Invoker<A>];
 
 export type FactoryFn<A> = () => void | InvokeTesters<A>;
 
 export type InvokeTesters<A> =
   | Array<InvokeTest<A>>
-  | Map<
-      InvokeCheck<A>,
-      Array<InvokeFn<A> | $NonFunction> | (InvokeFn<A> | $NonFunction),
-    >
+  | Map<InvokeCheck<A>, Invoker<A>>
   | FactoryFn<A>;
 
 function runTests(_tests) {
