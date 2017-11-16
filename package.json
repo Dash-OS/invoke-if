@@ -1,21 +1,28 @@
 {
   "name": "invoke-if",
-  "version": "1.2.1",
-  "description": "A redux reducer-generator which builds a redux-reducer from an array of reducers.",
-  "main": "dist/invoke-if.js",
+  "version": "2.0.0",
+  "description":
+    "A powerful control-flow invoker based on the structure of ES6 Maps",
+  "main": "lib/main.js",
   "module": "src/main.js",
   "author": "Braden R. Napier",
   "license": "MIT",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --require co-mocha",
-    "prepublish": "npm run build:prod",
-    "build:prod": "cross-env NODE_ENV=production BABEL_ENV=production babel-node config/scripts/build",
-    "build": "babel-node config/scripts/build"
+    "flow": "flow",
+    "build":
+      "cross-env NODE_ENV=production rimraf lib && npm-run-all -p build:**",
+    "build:main:babel": "babel src --out-dir lib",
+    "build:main:flow": "flow-copy-source src lib",
+    "prepublish": "npm-run-all build"
   },
   "keywords": [
     "invoke",
     "utility",
-    "function"
+    "function",
+    "switch",
+    "if",
+    "flow",
+    "control"
   ],
   "repository": {
     "type": "git",
@@ -27,18 +34,28 @@
   "devDependencies": {
     "app-root-dir": "^1.0.2",
     "babel-cli": "^6.24.1",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
     "babel-loader": "^7.0.0",
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-babili": "^0.1.2",
-    "babel-preset-env": "^1.5.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-minify": "^0.2.0",
     "babel-preset-stage-0": "^6.24.1",
     "babili-webpack-plugin": "^0.1.1",
     "colors": "^1.1.2",
-    "cross-env": "^5.0.0",
+    "cross-env": "^5.1.1",
+    "eslint": "^4.11.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-import": "^2.8.0",
+    "flow-bin": "^0.59.0",
+    "flow-copy-source": "^1.2.1",
     "happypack": "^3.1.0",
     "lodash-webpack-plugin": "^0.11.4",
-    "rimraf": "^2.6.1",
+    "npm-run-all": "^4.1.2",
+    "rimraf": "^2.6.2",
     "webpack": "^2.6.1",
     "webpack-node-externals": "^1.6.0",
     "yargs": "^8.0.1"

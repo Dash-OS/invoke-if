@@ -1,29 +1,77 @@
-const invokeNext = (response, ...tests) => tests.forEach(
-  ([ test, fn, ...rest]) => {
-    if ( typeof test === 'function' ) { test = test(response) }
-    if ( test ) { 
-      const next = typeof fn === 'function'
-        ? fn(response) 
-        : fn
-      if ( rest.length > 0 ) {
-        return invokeNext(next, ...rest) 
-      } else { return next }
+/* @flow */
+
+// TODO: Type Checking should be able to take the
+//       return value of the check fn and provide the
+//       inferred type to the invoke fns.
+export type $NonFunction = boolean | string | number | { [key: string]: * };
+
+export type InvokeCheck<+A> = (() => A) | A;
+export type InvokeFn<A> = (arg: A) => mixed;
+
+export type InvokeTest<A> = [
+  InvokeCheck<A>,
+  Array<InvokeFn<A> | $NonFunction> | (InvokeFn<A> | $NonFunction),
+];
+
+export type FactoryFn<A> = () => void | InvokeTesters<A>;
+
+export type InvokeTesters<A> =
+  | Array<InvokeTest<A>>
+  | Map<
+      InvokeCheck<A>,
+      Array<InvokeFn<A> | $NonFunction> | (InvokeFn<A> | $NonFunction),
+    >
+  | FactoryFn<A>;
+
+function runTests(_tests) {
+  const results = [];
+
+  let tests = _tests;
+
+  while (typeof tests === 'function') {
+    tests = tests();
+  }
+
+  if (!tests) {
+    return results;
+  }
+
+  tests = [...tests];
+
+  while (tests.length) {
+    let [check, invokes] = tests.shift();
+    if (typeof check === 'function') {
+      check = check();
+    }
+    if (check) {
+      if (typeof invokes === 'function') {
+        results.push(invokes(check));
+      } else if (Array.isArray(invokes)) {
+        invokes
+          .filter(Boolean)
+          .forEach(
+            invoke =>
+              (typeof invoke === 'function'
+                ? results.push(invoke(check))
+                : results.push(invoke)),
+          );
+      } else if (invokes) {
+        results.push(invokes);
+      }
+    } else {
+      break;
     }
   }
-)
+  return results;
+}
 
-const invokeIf = (...tests) => tests.forEach(
-  ([ test, fn, ...rest ]) => {
-    if ( typeof test === 'function' ) { test = test() }
-    if ( test ) { 
-      const response = typeof fn === 'function'
-        ? fn()
-        : fn
-      if ( rest.length > 0 ) {
-        return invokeNext(response, ...rest)
-      } else { return response }
-    }
-  }
-)
+function invokeReduce(...tests: Array<InvokeTesters<*>>) {
+  return tests.reduce((p, c) => p.concat(runTests(c)), []);
+}
 
-export default invokeIf
+function invokeMap(...tests: Array<InvokeTesters<*>>) {
+  return tests.map(test => runTests(test));
+}
+
+export default invokeReduce;
+export { invokeMap, invokeReduce };
