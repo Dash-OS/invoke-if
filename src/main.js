@@ -12,7 +12,13 @@ export type Invoker<A> =
   | Array<InvokeFn<A> | $NonFunction>
   | (InvokeFn<A> | $NonFunction);
 
-export type InvokeTest<A> = [InvokeCheck<A>, Invoker<A>];
+export type ElseInvoker<A> =
+  | Array<InvokeFn<A> | $NonFunction>
+  | (InvokeFn<A> | $NonFunction);
+
+export type InvokeTest<A> =
+  | [InvokeCheck<A>, Invoker<A>]
+  | [InvokeCheck<A>, Invoker<A>, ElseInvoker<A>];
 
 export type FactoryFn<A> = () => void | InvokeTesters<A>;
 
@@ -37,7 +43,8 @@ function runTests(_tests) {
   tests = [...tests];
 
   while (tests.length) {
-    let [check, invokes] = tests.shift();
+    // $FlowIgnore
+    let [check, invokes, elseinvokes] = tests.shift();
     if (typeof check === 'function') {
       check = check();
     }
@@ -56,6 +63,21 @@ function runTests(_tests) {
       } else if (invokes) {
         results.push(invokes);
       }
+    } else if (elseinvokes) {
+      if (typeof elseinvokes === 'function') {
+        results.push(elseinvokes(check));
+      } else if (Array.isArray(elseinvokes)) {
+        elseinvokes
+          .filter(Boolean)
+          .forEach(
+            invoke =>
+              (typeof invoke === 'function'
+                ? results.push(invoke(check))
+                : results.push(invoke)),
+          );
+      } else if (elseinvokes) {
+        results.push(elseinvokes);
+      }
     } else {
       break;
     }
@@ -63,11 +85,11 @@ function runTests(_tests) {
   return results;
 }
 
-function invokeReduce(...tests: Array<InvokeTesters<*>>) {
+function invokeReduce(...tests: Array<InvokeTesters<mixed>>) {
   return tests.reduce((p, c) => p.concat(runTests(c)), []);
 }
 
-function invokeMap(...tests: Array<InvokeTesters<*>>) {
+function invokeMap(...tests: Array<InvokeTesters<mixed>>) {
   return tests.map(test => runTests(test));
 }
 

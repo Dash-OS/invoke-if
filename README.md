@@ -144,3 +144,91 @@ of results which are a closer match to the original array.
 ```js
 declare function invokeMap(...tests: Array<InvokeTesters<*>>): Array<mixed>;
 ```
+
+## Control Flow
+
+`invoke-if` makes composing various situations much simpler then nesting if/else
+statements of using switches in many cases. Below is a description of how the
+arguments will be evaluated.
+
+### if/if...
+
+`invoke-if` evaluates entry within an argument until the it encounters a check
+that results in a `falsey` response. In the nested example below, we would
+invoke entries 1 and 2 while 3 and 4 would not occur since evaluating 3
+resulting in a `falsey` result.
+
+```js
+invokeIf([
+  ['true', () => console.log(1)],
+  [() => true, () => console.log(2)],
+  [false, () => console.log(3)],
+  [true, () => console.log(4)],
+]);
+```
+
+### if/then
+
+`invoke-if` evaluates each argument independently of the others. Each separate
+argument sent to one of `invoke-if`'s functions can be thought of as `then`
+arguments.
+
+In the example below, we would invoke arguments 1, 2, 5, and 6.
+
+```js
+invokeIf(
+  [
+    ['true', () => console.log(1)],
+    [() => true, () => console.log(2)],
+    [false, () => console.log(3)],
+    [true, () => console.log(4)],
+  ],
+  [
+    ['true', () => console.log(5)],
+    [() => true, () => console.log(6)],
+    [false, () => console.log(7)],
+    [true, () => console.log(8)],
+  ],
+);
+```
+
+### if/else
+
+When encountering a failed argument, `invoke-if` will check if there is a third
+element to the entry (not compatible with `Map`). If there is, it will invoke
+the third element and add it to the results before breaking evaluation of the
+given argument.
+
+In the example above it will print `1` then `2` then `'done'`
+
+```js
+const done = () => console.log('done');
+
+invokeIf([
+  ['true', () => console.log(1), done],
+  [() => true, () => console.log(2), done],
+  [false, () => console.log(3), done],
+  [true, () => console.log(4), done],
+]);
+```
+
+### Customized Flow
+
+When encountering a function rather than an Array or Map, it will assume that
+the function is a factory. It will first call the function and will evaluate the
+result if it can.
+
+The example below is identical to the `if/else` example above.
+
+```js
+const done = () => console.log('done');
+
+invokeIf([
+  () => [
+    ['true', () => console.log(1), done],
+    [() => true, () => console.log(2), done],
+    [false, () => console.log(3), done],
+    [true, () => console.log(4), done],
+  ],
+]);
+```
