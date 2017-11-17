@@ -1,6 +1,6 @@
 {
   "name": "invoke-if",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description":
     "A powerful control-flow invoker based on the structure of ES6 Maps",
   "main": "lib/main.js",
