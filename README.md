@@ -151,6 +151,35 @@ of results which are a closer match to the original array.
 declare function invokeMap(...tests: Array<InvokeTesters<*>>): Array<mixed>;
 ```
 
+### invokeAny (Function)
+
+A shortcut for handling the situation when you want to evaluate every entry
+regardless of if a `falsey` value is found within the chain.
+
+It is an alias for doing something like:
+
+```js
+invokeIf(
+  [[true, () => console.log(1)]],
+  [[true, () => console.log(2)]],
+  [[false, () => console.log(3)]],
+  [[true, () => console.log(4)]],
+);
+
+// Same as
+
+invokeAny(
+  [true, () => console.log(1)],
+  [true, () => console.log(2)],
+  [false, () => console.log(3)],
+  [true, () => console.log(4)],
+);
+```
+
+```js
+declare function invokeAny(...tests: Array<InvokeTest<*>>): Array<mixed>;
+```
+
 ## Control Flow
 
 `invoke-if` makes composing various situations much simpler then nesting if/else

@@ -43,6 +43,10 @@ function runTests(_tests) {
   tests = [...tests];
 
   while (tests.length) {
+    // Flow Ignore required as it does not properly
+    // handle multiple tuple refinement, although the
+    // type itself is sound and it handles it other than
+    // throwing the error.
     // $FlowIgnore
     let [check, invokes, elseinvokes] = tests.shift();
     if (typeof check === 'function') {
@@ -94,5 +98,9 @@ function invokeMap(...tests: Array<InvokeTesters<mixed>>) {
   return tests.map(test => runTests(test));
 }
 
+function invokeAny(...tests: Array<InvokeTest<mixed>>) {
+  return tests.reduce((p, c) => p.concat(runTests([c])), []);
+}
+
 export default invokeReduce;
-export { invokeMap, invokeReduce };
+export { invokeMap, invokeReduce, invokeAny };
