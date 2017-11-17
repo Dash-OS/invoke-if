@@ -4,7 +4,7 @@ import invokeIf from '../src/main';
 
 log('Begin InvokeIf Factory Invoke Tests');
 
-let i = 0;
+const i = 0;
 
 const INVOKE_TESTS = [
   () => {
@@ -34,7 +34,7 @@ function one() {
 log('Example One Result (Invoke 1): \n', one());
 
 // increment and make it switch to the next
-i += 1;
+// i += 1;
 
 log('Example One Result (Invoke 2): \n', one());
 

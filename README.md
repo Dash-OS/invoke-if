@@ -224,17 +224,32 @@ When encountering a function rather than an Array or Map, it will assume that
 the function is a factory. It will first call the function and will evaluate the
 result if it can.
 
-The example below is identical to the `if/else` example above.
+The example below will toggle which case is executed each time it is called.
 
 ```js
-const done = () => console.log('done');
+let i = 0;
 
-invokeIf([
-  () => [
-    ['true', () => console.log(1), done],
-    [() => true, () => console.log(2), done],
-    [false, () => console.log(3), done],
-    [true, () => console.log(4), done],
-  ],
-]);
+const done = () => {
+  i += 1;
+  console.log('done');
+};
+
+function doinvoke() {
+  return invokeIf(
+    () =>
+      i % 2 === 0 && [
+        ['true', () => console.log(1), done],
+        [() => true, () => console.log(2), done],
+        [false, () => console.log(3), done],
+        [true, () => console.log(4), done],
+      ],
+    () =>
+      i % 2 !== 0 && [
+        ['true', () => console.log(5), done],
+        [() => true, () => console.log(6), done],
+        [false, () => console.log(7), done],
+        [true, () => console.log(8), done],
+      ],
+  );
+}
 ```

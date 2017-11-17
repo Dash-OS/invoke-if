@@ -20,7 +20,7 @@ export type InvokeTest<A> =
   | [InvokeCheck<A>, Invoker<A>]
   | [InvokeCheck<A>, Invoker<A>, ElseInvoker<A>];
 
-export type FactoryFn<A> = () => void | InvokeTesters<A>;
+export type FactoryFn<A> = () => void | false | null | InvokeTesters<A>;
 
 export type InvokeTesters<A> =
   | Array<InvokeTest<A>>
@@ -78,6 +78,7 @@ function runTests(_tests) {
       } else if (elseinvokes) {
         results.push(elseinvokes);
       }
+      break;
     } else {
       break;
     }
