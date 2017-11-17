@@ -31,7 +31,7 @@ are not likely to work. These changes were done during perf tests when we
 realized 90% speed improvements by slightly adjusting the data structure that
 invoke-if operates upon.
 
-## Simple Example
+## Examples
 
 ```js
 /* @flow */
@@ -102,6 +102,11 @@ log('Example Two Result: \n', two());
 */
 ```
 
+> There are many examples / tests available in the
+> [examples directory](https://github.com/Dash-OS/invoke-if/tree/master/examples)
+
+---
+
 ## Type Signatures
 
 ```js
@@ -129,6 +134,8 @@ export type InvokeTesters<A> =
   | Map<InvokeCheck<A>, Invoker<A>>
   | FactoryFn<A>;
 ```
+
+---
 
 ## Module Exports
 
@@ -179,6 +186,8 @@ invokeAny(
 ```js
 declare function invokeAny(...tests: Array<InvokeTest<*>>): Array<mixed>;
 ```
+
+---
 
 ## Control Flow
 
