@@ -224,7 +224,8 @@ When encountering a function rather than an Array or Map, it will assume that
 the function is a factory. It will first call the function and will evaluate the
 result if it can.
 
-The example below will toggle which case is executed each time it is called.
+The example below will toggle which case is executed each time any of the
+current elements tests encounters a `falsey` response.
 
 ```js
 let i = 0;
