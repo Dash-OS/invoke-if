@@ -114,7 +114,13 @@ export type Invoker<A> =
   | Array<InvokeFn<A> | $NonFunction>
   | (InvokeFn<A> | $NonFunction);
 
-export type InvokeTest<A> = [InvokeCheck<A>, Invoker<A>];
+export type ElseInvoker<A> =
+  | Array<InvokeFn<A> | $NonFunction>
+  | (InvokeFn<A> | $NonFunction);
+
+export type InvokeTest<A> =
+  | [InvokeCheck<A>, Invoker<A>]
+  | [InvokeCheck<A>, Invoker<A>, ElseInvoker<A>];
 
 export type FactoryFn<A> = () => void | InvokeTesters<A>;
 
